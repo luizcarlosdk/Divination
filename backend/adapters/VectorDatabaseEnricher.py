@@ -1,18 +1,22 @@
-from ../ports import ContextEnricher
+from ports import ContextEnricher
 
 from langchain_community.document_loaders import TextLoader
 from langchain_chroma import Chroma
-from langchain_openai import openaiEmbeddings
+from langchain_openai import OpenAIEmbeddings
 
 class VectorDatabaseEnricher(ContextEnricher):
 
-    def getData(self, query) -> Context:
+    def getData(self, query):
         loader = TextLoader("../database/textobase.txt")
         documento = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         splits = text_splitter.split_documents(documento)
-        vectorstore = Chroma.from_documents(documents=splits, embedding=openaiEmbeddings(), persist_directory="../database/chroma_db", collection_name='vector_database')
+        vectorstore = Chroma.from_documents(
+        documents=splits,
+        embedding=openaiEmbeddings(),
+        persist_directory="../database/chroma_db",
+        collection_name='vector_database')
 
         retriever = vectorstore.as_retriever()
 

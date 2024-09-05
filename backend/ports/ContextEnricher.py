@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 class ContextEnricher(ABC):
 
     @abstractmethod
-    getData(self, query) -> Context:
+    def getData(self, query):
         pass
 
     @abstractmethod
-    getAnswer(self, query, context) -> Answer:
+    def getAnswer(self, query, context):
         pass
