@@ -7,5 +7,5 @@ class ContextEnricher(ABC):
         pass
 
     @abstractmethod
-    getAnswer(self, query, context):
+    getAnswer(self, query, context) -> Answer:
         pass
