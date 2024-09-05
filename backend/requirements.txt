@@ -5,3 +5,4 @@ langchain-chroma
 bs4
 langchain-openai
 python-dotenv==0.19.1
+fastapi[standard]
