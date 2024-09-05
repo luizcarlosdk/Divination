@@ -1,2 +1,2 @@
 .env
-./adapters/__pycache__
+./src/adapters/__pycache__
