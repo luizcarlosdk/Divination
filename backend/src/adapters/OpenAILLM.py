@@ -10,7 +10,7 @@ import getpass
 import os
 
 
-def openAILLM(ContextEnricher):
+class openAILLM(ContextEnricher):
 
     def getAnswer(self,query,context):
 
