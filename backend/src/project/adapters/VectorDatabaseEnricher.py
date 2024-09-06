@@ -15,7 +15,7 @@ class VectorDatabaseEnricher(ContextEnricher):
         splits = text_splitter.split_documents(documento)
         vectorstore = Chroma.from_documents(
         documents=splits,
-        embedding=openaiEmbeddings(),
+        embedding=OpenAIEmbeddings(),
         persist_directory="../database/chroma_db",
         collection_name='vector_database')
 
