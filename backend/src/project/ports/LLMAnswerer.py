@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class LLMAnswerer.py:
+class LLMAnswerer(ABC):
 
     @abstractmethod
     def getAnswer(self, query, context):

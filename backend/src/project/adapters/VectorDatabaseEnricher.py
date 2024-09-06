@@ -1,4 +1,4 @@
-from ports import ContextEnricher
+from project.ports.ContextEnricher import ContextEnricher
 
 from langchain_community.document_loaders import TextLoader
 from langchain_chroma import Chroma
@@ -7,7 +7,7 @@ from langchain_openai import OpenAIEmbeddings
 class VectorDatabaseEnricher(ContextEnricher):
 
     def getData(self, query):
-        loader = TextLoader("../database/textobase.txt")
+        loader = TextLoader("src/project/database/textobase.txt")
         documento = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)

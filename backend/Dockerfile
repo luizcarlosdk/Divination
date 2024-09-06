@@ -2,10 +2,14 @@ ARG PYTHON_VERSION=3.8
 
 FROM python:${PYTHON_VERSION} AS build
 
-WORKDIR /app
+# Set working directory to /usr/src
+WORKDIR /usr/src
 
-COPY . /app
+# Copy all files into /usr/src
+COPY . ./
 
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python","src/main.py"]
+ENV PYTHONPATH=/usr/src/src
+CMD ["python", "src/project/main.py"]

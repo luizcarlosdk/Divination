@@ -1,4 +1,4 @@
-from ..ports import LLMAnswerer
+from project.ports.LLMAnswerer import LLMAnswerer
 
 from langchain_openai import ChatOpenAI
 from langchain import hub
@@ -10,7 +10,7 @@ import getpass
 import os
 
 
-class openAILLM(LLMAnswerer):
+class OpenAILLM(LLMAnswerer):
 
     def getAnswer(self,query,context):
 

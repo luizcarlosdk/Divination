@@ -1,8 +1,9 @@
 print("This is the mainfile,test")
 
-from ports import ContextEnricher 
-from adapters import OpenAILLM
-from adapters import VectorDatabaseEnricher
+from project.ports.ContextEnricher import ContextEnricher
+from project.adapters.OpenAILLM import OpenAILLM
+from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
+
 
 class ChatService:
     def __init__(self):
