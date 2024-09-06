@@ -1,4 +1,4 @@
-from ports import ContextEnricher
+from ..ports import LLMAnswerer
 
 from langchain_openai import ChatOpenAI
 from langchain import hub
@@ -10,7 +10,7 @@ import getpass
 import os
 
 
-class openAILLM(ContextEnricher):
+class openAILLM(LLMAnswerer):
 
     def getAnswer(self,query,context):
 
