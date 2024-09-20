@@ -2,18 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
 
-    config = SettingsConfigDict(env_file=".env")
-
+    model_config = SettingsConfigDict(env_file=".env",extra="ignore")
 
 class SecurityVariables(Settings):
 
-    api_openai_key: str
-    api_langchain_key: str
-
-    @property
-    openai_key(self):
-        return api_openai_key
-    
-    @property
-    langchain_key(self):
-        return api_langchain_key
+    OPENAI_API_KEY: str
+    LANGCHAIN_API_KEY: str
