@@ -1,9 +1,8 @@
+pydantic-settings
 langchain
 langchain-community
 langchainhub
 langchain-chroma
 bs4
 langchain-openai
-python-dotenv==0.19.1
-fastapi[standard]
-pydantic
+python-dotenv
