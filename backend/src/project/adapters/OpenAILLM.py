@@ -1,9 +1,8 @@
 from project.ports.LLMAnswerer import LLMAnswerer
+from project.core.RagChain import RagChain
 
 from langchain_openai import ChatOpenAI
 from langchain import hub
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from dotenv import load_dotenv
 
 import getpass
@@ -22,13 +21,8 @@ class OpenAILLM(LLMAnswerer):
         llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
         prompt = hub.pull("rlm/rag-prompt")
 
-        # singleton
-        rag_chain = (
-            {"context": context, "question": RunnablePassthrough()}
-            | prompt
-            | llm
-            | StrOutputParser()
-        )
-        answer = rag_chain.invoke(query)
+        rag_chain = RagChain()
+
+        answer = rag_chain.answer(query)
 
         return answer
