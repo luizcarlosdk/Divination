@@ -1,5 +1,3 @@
-from project.ports.ContextEnricher import ContextEnricher
-
 from project.adapters.OpenAILLM import OpenAILLM
 from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
 from project.adapters.Settings import SecurityVariables
