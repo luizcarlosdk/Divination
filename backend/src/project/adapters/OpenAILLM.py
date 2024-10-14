@@ -5,9 +5,7 @@ from langchain_openai import ChatOpenAI
 from langchain import hub
 from dotenv import load_dotenv
 
-import getpass
 import os
-
 
 class OpenAILLM(LLMAnswerer):
 
@@ -21,7 +19,7 @@ class OpenAILLM(LLMAnswerer):
         llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
         prompt = hub.pull("rlm/rag-prompt")
 
-        rag_chain = RagChain()
+        rag_chain = RagChain(context,prompt, llm, query)
 
         answer = rag_chain.answer(query)
 
