@@ -7,7 +7,7 @@ class RagChain():
         self.prompt = prompt
         self.llm = llm
 
-    def answer(query):
+    def answer(self,query):
 
         rag_chain = (
             {"context": self.context, "question": RunnablePassthrough()}
