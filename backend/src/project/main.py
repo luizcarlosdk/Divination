@@ -1,37 +1,42 @@
-from project.adapters.OpenAILLM import OpenAILLM
-from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
 from project.adapters.AnswerRouter import AnswerRouter
 from project.adapters.Settings import Settings
-
+from project.adapters.OpenAILLM import OpenAILLM
+from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
 from project.core.ChatService import ChatService
 
-# import aiohttp
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 
-def _inject_routers(api: FastAPI):
-    api.include_router(AnswerRouter.create())
+def _inject_routers(api: FastAPI, router: AnswerRouter):
+    api.include_router(router.create())
 
 
-async def _setup(api: FastAPI):
-    _inject_routers(api)
+@asynccontextmanager
+async def _setup(api: FastAPI, settings: Settings):
+    context_enricher = VectorDatabaseEnricher()
+    llm_answerer = OpenAILLM()
+    service = ChatService(context_enricher, llm_answerer, settings)
+    router = AnswerRouter(service)
+    _inject_routers(api, router)
+    yield
 
 
 def _create_api(settings: Settings):
     project_api = FastAPI(
         title="D&D answerer API",
         version="0.1",
-        lifespan=lambda api: _setup(api),
+        lifespan=lambda api: _setup(api, settings),
     )
 
     project_api.add_middleware(
         CORSMiddleware,
         allow_credentials=True,
-        allowed_origins=settings.api.allowed_origins,
-        allowed_methods=settings.api.allowed_methods,
-        allowed_headers=settings.api.allowed_headers,
+        allow_origins=settings.api.allowed_origins,
+        allow_methods=settings.api.allowed_methods,
+        allow_headers=settings.api.allowed_headers,
     )
 
     return project_api
@@ -44,13 +49,6 @@ def _run_uvicorn(settings: Settings):
         port=settings.api.port,
     )
 
-
-# def create_answer(query):
-#    context_enricher = VectorDatabaseEnricher()
-#    llm_answerer = OpenAILLM()
-#    settings = SecurityVariables()
-#    service = ChatService(context_enricher, llm_answerer, settings)
-#    router = AnswerRouter(service)
 
 project_settings = Settings.load()
 project_api = _create_api(project_settings)

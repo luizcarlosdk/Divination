@@ -2,9 +2,8 @@ services:
   api:
     build: .
     ports:
-      - "8888:8888"
+      - "${PORT}:${PORT}"
     volumes:
       - .:/usr/src
     env_file:
       - ".env"
-
