@@ -1,10 +1,7 @@
 from fastapi import APIRouter
 from project.ports.Router import Router
-
 from project.core.ChatService import ChatService
-
-from pydantic import BaseModel, ConfigDict
-from pydantic.alias_generators import to_camel
+from project.adapters.answer_dto import AnswerRequest, AnswerResponse
 
 
 class AnswerRouter(Router):
@@ -21,19 +18,3 @@ class AnswerRouter(Router):
             return AnswerResponse.create_answer(answer)
 
         return router
-
-
-class RouteExchange(BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
-
-
-class AnswerRequest(RouteExchange):
-    user_question: str
-
-
-class AnswerResponse(RouteExchange):
-    project_answer: str
-
-    @classmethod
-    def create_answer(self, answer: str):
-        return AnswerResponse(project_answer=answer)
