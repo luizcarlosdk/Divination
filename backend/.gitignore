@@ -1,2 +1,3 @@
 .env
-./src/project/adapters/__pycache__
+__pycache__/
+*.pyc
