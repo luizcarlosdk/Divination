@@ -18,4 +18,11 @@ class AnswerTemplate(TemplateEnricher):
         return custom_template
 
     def changeTemplate(self, new_template):
-        self.template = new_template
+        path = ""
+        if new_template == "default":
+            path = "src/project/database/defaultTemplate.txt"
+        if new_template == "creative":
+            path = "src/project/database/creativeTemplate.txt"
+
+        with open(path) as new_personality:
+            self.template = new_personality.read()
