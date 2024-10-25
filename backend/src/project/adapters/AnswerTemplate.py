@@ -16,3 +16,6 @@ class AnswerTemplate(TemplateEnricher):
     def getTemplate(self):
         custom_template = PromptTemplate.from_template(self.template)
         return custom_template
+
+    def changeTemplate(self, new_template):
+        self.template = new_template

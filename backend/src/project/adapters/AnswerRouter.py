@@ -1,7 +1,11 @@
 from fastapi import APIRouter
 from project.ports.Router import Router
 from project.core.ChatService import ChatService
-from project.adapters.answer_dto import AnswerRequest, AnswerResponse
+from project.adapters.answer_dto import (
+    AnswerRequest,
+    AnswerResponse,
+    ChangeTemplate,
+)
 
 
 class AnswerRouter(Router):
@@ -10,6 +14,13 @@ class AnswerRouter(Router):
 
     def create(self):
         router = APIRouter()
+
+        @router.post("/v1/context")
+        def change_template(template: ChangeTemplate):
+            self.chat_service.answer_template.changeTemplate(
+                template.new_template
+            )
+            return "Template Alterado"
 
         @router.post("/v1/answer")
         def get_answer(request: AnswerRequest) -> AnswerResponse:
