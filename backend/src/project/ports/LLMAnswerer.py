@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-class LLMAnswerer(ABC):
 
+class LLMAnswerer(ABC):
     @abstractmethod
-    def getAnswer(self, query, context, Settings):
+    def getAnswer(self, query, context, template, Settings):
         pass

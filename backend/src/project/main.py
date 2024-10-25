@@ -3,6 +3,7 @@ from project.adapters.Settings import Settings
 from project.adapters.OpenAILLM import OpenAILLM
 from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
 from project.core.ChatService import ChatService
+from project.adapters.AnswerTemplate import AnswerTemplate
 
 import uvicorn
 from fastapi import FastAPI
@@ -18,7 +19,8 @@ def _inject_routers(api: FastAPI, router: AnswerRouter):
 async def _setup(api: FastAPI, settings: Settings):
     context_enricher = VectorDatabaseEnricher()
     llm_answerer = OpenAILLM()
-    service = ChatService(context_enricher, llm_answerer, settings)
+    template = AnswerTemplate()
+    service = ChatService(context_enricher, llm_answerer, template, settings)
     router = AnswerRouter(service)
     _inject_routers(api, router)
     yield
