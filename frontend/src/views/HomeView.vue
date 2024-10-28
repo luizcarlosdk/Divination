@@ -1,9 +1,19 @@
-<script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
   <main>
-    <TheWelcome />
+    <div>
+      <Chat/>
+    </div>
   </main>
 </template>
+
+<script>
+
+import Chat from '../components/Chat.vue'
+
+export default {
+  components: {
+    Chat
+  }
+}
+
+</script>
