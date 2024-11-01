@@ -21,8 +21,9 @@ class AnswerTemplate(TemplateEnricher):
         path = ""
         if new_template == "default":
             path = "src/project/database/defaultTemplate.txt"
-        if new_template == "creative":
+        elif new_template == "creative":
             path = "src/project/database/creativeTemplate.txt"
-
+        else:
+            return "personalidade não encontrada"
         with open(path) as new_personality:
             self.template = new_personality.read()

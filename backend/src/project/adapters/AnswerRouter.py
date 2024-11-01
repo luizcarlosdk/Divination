@@ -20,7 +20,7 @@ class AnswerRouter(Router):
             self.chat_service.answer_template.changeTemplate(
                 template.new_template
             )
-            return "Template Alterado"
+            return template.new_template
 
         @router.post("/v1/answer")
         def get_answer(request: AnswerRequest) -> AnswerResponse:
