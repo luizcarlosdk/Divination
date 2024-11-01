@@ -1,14 +1,32 @@
 <template>
   <v-container class="fill-height pa-0">
     <v-row>
-      <v-col>
-        <v-card class="chat">
+      <v-col class="chats" cols="4">
+        <v-icon
+          class="new-chat"
+          color="white"
+          icon="mdi-plus-circle"
+          size="large"
+          @click="createChat"
+        ></v-icon>
+        <div class="chats">
+          <v-list v-for="(chat, i) in chats" :key="i" class="chat-preview">
+            <v-list-item-content>
+              {{ chat }}
+            </v-list-item-content>
+          </v-list>
+        </div>
+      </v-col>
+      <v-col class="current-chat">
+        <v-card>
           <v-card-title>Chat Dungeons and Dragons</v-card-title>
           <v-card-text>
             <v-card class="message-box mb-4">
               <v-list>
-                <v-list-item v-for="(message, index) in messages" :key="index">
-                  <v-list-item-content>{{ message }}</v-list-item-content>
+                <v-list-item v-for="(message, i) in messages" :key="i">
+                  <v-list-item-content class="chat-message">{{
+                    message
+                  }}</v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -29,14 +47,6 @@
               @keyup.enter="sendMessage"
             />
           </v-card-text>
-          <div class="personalities">
-            <v-btn @click="changePersonality('default')"
-              >Personalidade restrita</v-btn
-            >
-            <v-btn @click="changePersonality('creative')"
-              >Personalidade criativa</v-btn
-            >
-          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -51,9 +61,13 @@ export default {
     inputText: '',
     loading: false,
     messages: [],
+    chats: ['Chat 1 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Chat 2', 'Chat 3'],
   }),
 
   methods: {
+    createChat() {
+      this.chats.push('New Chat')
+    },
     async sendMessage() {
       const base_url = import.meta.env.VITE_BACKEND_URL
 
@@ -73,8 +87,6 @@ export default {
           error.response ? error.response.data : error.message
         )
       }
-
-      // antes de apagar o input enviar para o back
       this.loading = true
 
       setTimeout(() => {
@@ -103,19 +115,47 @@ export default {
 </script>
 
 <style>
-.chat {
-  background-color: grey;
+.new-chat {
+  align-self: center;
+  margin-bottom: 1em;
+}
+.chats {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 1.5em 0em 0em 1.5em;
+  max-height: 760px; /* Set a max height for scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 1em; /* Optional padding */
+}
+.current-chat {
+  border-radius: 0em 1.5em 1.5em 0em;
+  background-color: rgb(61, 13, 61);
+}
+
+.chat-preview {
+  background-color: #b2a0d3;
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  padding: 1em;
+  border-radius: 1em 0.5em 0.5em 1em;
+  margin-bottom: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis ' [..]';
+  max-height: 50px;
 }
 .message-box {
   background-color: white;
-  min-height: 600px; /* Set a minimum height */
-  max-height: 300px; /* Limit maximum height */
+  min-height: 600px;
+  max-height: 300px;
   overflow-y: auto;
-  padding: 3px;
+  padding: 0px;
 }
 
-.personalities {
-  display: flex;
-  justify-content: space-around;
+.chat-message {
+  font-size: 140%;
+  font-family: verdana;
 }
 </style>
