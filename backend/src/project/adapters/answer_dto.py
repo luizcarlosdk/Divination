@@ -3,6 +3,7 @@ from project.adapters.route_exchange import RouteExchange
 
 class AnswerRequest(RouteExchange):
     user_question: str
+    chat_id: int
 
 
 class AnswerResponse(RouteExchange):

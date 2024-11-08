@@ -6,6 +6,12 @@ from project.adapters.answer_dto import (
     AnswerResponse,
     ChangeTemplate,
 )
+from project.adapters.chat_dto import (
+    CreateChatResponse,
+    ShowChatResponse,
+    ListChatsResponse,
+)
+from project.adapters.ChatRepository import ChatRepository
 
 
 class AnswerRouter(Router):
@@ -20,7 +26,7 @@ class AnswerRouter(Router):
 
         @router.post("/v1/context")
         def change_template(template: ChangeTemplate):
-            self.chat_service.answer_template.changeTemplate(
+            self.chat_service.answer_template.change_template(
                 template.new_template
             )
             return template.new_template
@@ -50,5 +56,3 @@ class AnswerRouter(Router):
             return ListChatsResponse.create(chats)
 
         return router
-
-        # user_question

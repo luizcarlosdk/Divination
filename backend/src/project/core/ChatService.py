@@ -10,22 +10,14 @@ class ChatService:
 
     def get_answer(self, query, chat_id):
         context = self.context_enricher.getData(query)
-        chat = self.chat_repository.getHistory(chat_id, max=10)
-        template = self.answer_template.getTemplate()
-        answer = self.llm_answerer.getAnswer(
-            query, context, chat, template, self.project_settings
+        template = self.answer_template.get_template()
+        history_template = self.answer_template.get_history_template()
+        return self.llm_answerer.get_answer(
+            chat_id,
+            query,
+            context,
+            self.chat_repository,
+            template,
+            history_template,
+            self.project_settings,
         )
-
-        return answer
-
-    # def create chat
-
-
-# na requisição vamos receber
-
-# id do usuário - pensar em como criar
-# personalidade do bot
-# pergunta
-# id da conversa
-#
-# chat service vai ser responsável por criar um novo chat
