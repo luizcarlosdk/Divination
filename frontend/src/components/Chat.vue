@@ -1,14 +1,22 @@
 <template>
-  <v-container class="fill-height pa-0">
+  <v-container fluid class="pa-2">
     <v-row>
-      <v-col class="chats" cols="4">
-        <v-icon
-          class="new-chat"
-          color="white"
-          icon="mdi-plus-circle"
-          size="large"
-          @click="createChat"
-        ></v-icon>
+      <v-col class="chats-column" cols="4">
+        <div class="add-new-chat">
+          <v-btn
+            @click="createChat"
+            color="rgb(61, 13, 61)"
+            class="new-chat-button"
+          >
+            Criar novo chat
+            <v-icon
+              color="white"
+              icon="mdi-plus-circle"
+              size="large"
+              end
+            ></v-icon>
+          </v-btn>
+        </div>
         <div class="chats">
           <v-list v-for="(chat, i) in chats" :key="i" class="chat-preview">
             <v-list-item-content>
@@ -17,8 +25,8 @@
           </v-list>
         </div>
       </v-col>
-      <v-col class="current-chat">
-        <v-card>
+      <v-col class="current-chat" cols="8">
+        <v-card class="chat-card">
           <v-card-title>Chat Dungeons and Dragons</v-card-title>
           <v-card-text>
             <v-card class="message-box mb-4">
@@ -61,7 +69,7 @@ export default {
     inputText: '',
     loading: false,
     messages: [],
-    chats: ['Chat 1 aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Chat 2', 'Chat 3'],
+    chats: ['Chat 1', 'Chat 2', 'Chat 3'],
   }),
 
   methods: {
@@ -78,6 +86,7 @@ export default {
       try {
         const response = await axios.post(`${base_url}/v1/answer`, {
           user_question: question,
+          chat_id: 1,
         })
         console.log(response)
         this.messages.push('Bot: ' + response.data.projectAnswer)
@@ -114,20 +123,32 @@ export default {
 }
 </script>
 
+
+
 <style>
+.chat-card {
+  height: 100vh;
+}
+
+.chats-column {
+  background-color: rgb(0, 0, 0, 0.3);
+}
+
 .new-chat {
   align-self: center;
   margin-bottom: 1em;
 }
+
 .chats {
   display: flex;
   flex-direction: column;
 
   border-radius: 1.5em 0em 0em 1.5em;
-  max-height: 760px; /* Set a max height for scrolling */
+  max-height: 900px; /* Set a max height for scrolling */
   overflow-y: auto; /* Enable vertical scrolling */
-  padding: 1em; /* Optional padding */
+  padding: 1.5em 0.5em; /* Optional padding */
 }
+
 .current-chat {
   border-radius: 0em 1.5em 1.5em 0em;
   background-color: rgb(61, 13, 61);
@@ -144,11 +165,11 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis ' [..]';
-  max-height: 50px;
+  min-height: 60px;
 }
 .message-box {
   background-color: white;
-  min-height: 600px;
+  min-height: 85vh;
   max-height: 300px;
   overflow-y: auto;
   padding: 0px;
@@ -157,5 +178,10 @@ export default {
 .chat-message {
   font-size: 140%;
   font-family: verdana;
+}
+
+.add-new-chat {
+  display: flex;
+  justify-content: center;
 }
 </style>
