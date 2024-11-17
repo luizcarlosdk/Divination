@@ -48,7 +48,6 @@ class OpenAILLM(LLMAnswerer):
             history_messages_key="chat_history",
             output_messages_key="answer",
         )
-
         answer = conversational_rag_chain.invoke(
             {"input": query},
             config={"configurable": {"session_id": chat_id}},

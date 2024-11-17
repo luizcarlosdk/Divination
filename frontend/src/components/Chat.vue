@@ -18,20 +18,29 @@
           </v-btn>
         </div>
         <div class="chats">
-          <v-list v-for="(chat, i) in chats" :key="i" class="chat-preview">
-            <v-list-item-content>
-              {{ chat }}
-            </v-list-item-content>
+          <v-list class="chats-list">
+            <v-list-item
+              v-for="(chat, i) in chats"
+              :key="i"
+              class="chat-preview"
+              rounded="x1"
+              color="#033"
+              @click="selectChat(i, chat.chat_id)"
+            >
+              <v-list-item-content>
+                {{ this.chats[i].messages[1] ? this.chats[i].messages[1] : `Chat ${i + 1}` }}
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </div>
       </v-col>
       <v-col class="current-chat" cols="8">
         <v-card class="chat-card">
-          <v-card-title>Chat Dungeons and Dragons</v-card-title>
+          <v-card-title>{{this.current_messages[0]}}</v-card-title>
           <v-card-text>
             <v-card class="message-box mb-4">
               <v-list>
-                <v-list-item v-for="(message, i) in messages" :key="i">
+                <v-list-item v-for="(message, i) in current_messages" :key="i">
                   <v-list-item-content class="chat-message">{{
                     message
                   }}</v-list-item-content>
@@ -51,8 +60,8 @@
               no-details
               append-outer-icon="send"
               hide-details
-              @click:append-inner="sendMessage"
-              @keyup.enter="sendMessage"
+              @click:append-inner="sendMessage(current_chat_id)"
+              @keyup.enter="sendMessage(current_chat_id)"
             />
           </v-card-text>
         </v-card>
@@ -66,30 +75,83 @@ import axios from 'axios'
 
 export default {
   data: () => ({
+    current_chat_id: null,
+    current_messages: [],
     inputText: '',
     loading: false,
-    messages: [],
-    chats: ['Chat 1', 'Chat 2', 'Chat 3'],
+    chats: [],
   }),
 
+  async beforeMount() {
+    const base_url = import.meta.env.VITE_BACKEND_URL
+  
+    
+    try {
+      const response = await axios.get(`${base_url}/v1/chats`)
+      const data = response.data.projectHistory 
+      console.log(data)
+      var chats = Object.keys(data).map(
+        chatId => ({
+          chat_id: chatId,
+          messages: data[chatId].messages.map(msg => msg.content) || []
+        })
+      )
+      this.chats = chats
+    }
+    catch {
+      console.log("retrieve chats had a problem")
+    }
+
+  },
   methods: {
-    createChat() {
-      this.chats.push('New Chat')
+    selectChat(index, id) {
+      console.log('chat_index:' + index + 'chat_id: ' + id)
+      this.current_chat_id = id
+
+      const selectedChat = this.chats.find(chat => chat.chat_id === id);
+
+      this.current_messages = selectedChat ? selectedChat.messages : [];
+
     },
-    async sendMessage() {
+    async createChat() {
       const base_url = import.meta.env.VITE_BACKEND_URL
 
+      try {
+        const response = await axios.post(`${base_url}/v1/chats`, {})
+        this.chats.push({
+          "chat_id": response.data.chatId,
+          messages: []
+        })
+        this.current_chat_id = response.data.chatId
+        const selectedChat = this.chats.find(chat => chat.chat_id === this.current_chat_id)
+        this.current_messages = selectedChat.messages
+      } catch {
+        console.log()
+      }
+
+
+    },
+    async sendMessage(actual_chat_id) {
+      const base_url = import.meta.env.VITE_BACKEND_URL
+
+      if(actual_chat_id == null) {
+        alert("Nenhum chat for selecionado")
+        return
+      }
+
       if (this.inputText.trim() === '') return
-      this.messages.push('Usuário: ' + this.inputText)
+      const actualChat = this.chats.find(chat => chat.chat_id === actual_chat_id);
+      actualChat.messages.push(this.inputText)
       const question = this.inputText
       this.inputText = ''
       try {
         const response = await axios.post(`${base_url}/v1/answer`, {
           user_question: question,
-          chat_id: 1,
+          chat_id: actual_chat_id,
         })
         console.log(response)
-        this.messages.push('Bot: ' + response.data.projectAnswer)
+        const actualChat = this.chats.find(chat => chat.chat_id === actual_chat_id);
+        actualChat.messages.push(response.data.projectAnswer)
       } catch (error) {
         console.error(
           'Error:',
@@ -126,6 +188,10 @@ export default {
 
 
 <style>
+.chats-list {
+  background-color: rgb(0, 0, 0, 0.3);
+}
+
 .chat-card {
   height: 100vh;
 }

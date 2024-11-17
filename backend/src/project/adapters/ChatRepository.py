@@ -8,9 +8,9 @@ class ChatRepository(Repository):
     def __init__(self):
         self.chats = {}
 
-    def create(self, id):
+    def create(self):
         randomId = str(uuid.uuid4())
-        self.chats[randomId] = []
+        self.chats[randomId] = ChatMessageHistory()
 
         return randomId
 
