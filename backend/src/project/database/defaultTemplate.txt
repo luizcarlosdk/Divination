@@ -5,6 +5,4 @@
 
         {context}
 
-        Question: {input}
-
         Helpful Answer:"""

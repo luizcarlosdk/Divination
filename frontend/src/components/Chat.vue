@@ -66,6 +66,8 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <v-btn @click="changePersonality('creative')" >Personalidade Criativa</v-btn>
+      <v-btn @click="changePersonality('default')" >Personalidade Restritiva</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -102,6 +104,9 @@ export default {
       console.log("retrieve chats had a problem")
     }
 
+  },
+  mounted() {
+    this.createChat()
   },
   methods: {
     selectChat(index, id) {

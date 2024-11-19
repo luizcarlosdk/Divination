@@ -4,6 +4,4 @@
 
         {context}
 
-        Question: {question}
-
         Helpful Answer:"""

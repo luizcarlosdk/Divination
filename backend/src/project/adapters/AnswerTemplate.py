@@ -26,17 +26,18 @@ class AnswerTemplate(TemplateEnricher):
             self.history_template = history_template
 
     def get_template(self):
-        custom_template = ChatPromptTemplate.from_messages(
+        custom_template = ChatPromptTemplate(
             [
                 ("system", self.template),
                 MessagesPlaceholder("chat_history"),
                 ("human", "{input}"),
             ]
         )
+        print(custom_template)
         return custom_template
 
     def get_history_template(self):
-        custom_template = ChatPromptTemplate.from_messages(
+        custom_template = ChatPromptTemplate(
             [
                 ("system", self.history_template),
                 MessagesPlaceholder("chat_history"),
@@ -53,5 +54,6 @@ class AnswerTemplate(TemplateEnricher):
             path = "src/project/database/creativeTemplate.txt"
         else:
             return "personalidade não encontrada"
+        print("path de personalidade atual:" + path)
         with open(path) as new_personality:
             self.template = new_personality.read()
