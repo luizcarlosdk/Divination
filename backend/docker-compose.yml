@@ -1,9 +1,0 @@
-services:
-  api:
-    build: .
-    ports:
-      - "${PORT}:${PORT}"
-    volumes:
-      - .:/usr/src
-    env_file:
-      - ".env"
