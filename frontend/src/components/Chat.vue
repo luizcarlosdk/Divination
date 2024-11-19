@@ -5,7 +5,6 @@
         <div class="add-new-chat">
           <v-btn
             @click="createChat"
-            color="rgb(61, 13, 61)"
             class="new-chat-button"
           >
             Criar novo chat
@@ -36,14 +35,21 @@
       </v-col>
       <v-col class="current-chat" cols="8">
         <v-card class="chat-card">
-          <v-card-title>{{this.current_messages[0]}}</v-card-title>
+          <v-card-title>{{ this.current_messages[0] }}</v-card-title>
           <v-card-text>
             <v-card class="message-box mb-4">
               <v-list>
-                <v-list-item v-for="(message, i) in current_messages" :key="i">
-                  <v-list-item-content class="chat-message">{{
-                    message
-                  }}</v-list-item-content>
+                <v-list-item
+                  v-for="(message, i) in current_messages"
+                  :key="i"
+
+                >
+                  <v-list-item-content  >
+                    <v-card-text :class="{'user-message': i % 2 === 0, 'bot-message': i % 2 !== 0}">
+                      {{ message }}
+                    </v-card-text>
+                    <v-list-item-title ></v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -72,6 +78,7 @@
   </v-container>
 </template>
 
+
 <script>
 import axios from 'axios'
 
@@ -86,11 +93,11 @@ export default {
 
   async beforeMount() {
     const base_url = import.meta.env.VITE_BACKEND_URL
-  
-    
+
+
     try {
       const response = await axios.get(`${base_url}/v1/chats`)
-      const data = response.data.projectHistory 
+      const data = response.data.projectHistory
       console.log(data)
       var chats = Object.keys(data).map(
         chatId => ({
@@ -193,6 +200,11 @@ export default {
 
 
 <style>
+
+.new-chat-button {
+  background-color:#b2a0d3;
+}
+
 .chats-list {
   background-color: rgb(0, 0, 0, 0.3);
 }
@@ -213,11 +225,10 @@ export default {
 .chats {
   display: flex;
   flex-direction: column;
-
   border-radius: 1.5em 0em 0em 1.5em;
-  max-height: 900px; /* Set a max height for scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  padding: 1.5em 0.5em; /* Optional padding */
+  max-height: 900px;
+  overflow-y: auto;
+  padding: 1.5em 0.5em;
 }
 
 .current-chat {
@@ -238,6 +249,7 @@ export default {
   text-overflow: ellipsis ' [..]';
   min-height: 60px;
 }
+
 .message-box {
   background-color: white;
   min-height: 85vh;
@@ -255,4 +267,29 @@ export default {
   display: flex;
   justify-content: center;
 }
+
+.user-message {
+  color: #000;
+  background: #d1ccdb;
+  border-radius: 2em;
+  padding: 20px;
+  margin: 5px;
+  max-width: 80%;
+  align-self: flex-start;
+  font-size: large;
+  word-wrap: break-word;
+}
+
+.bot-message {
+  color: rgb(0, 0, 0);
+  border-radius: 2em;
+  padding: 20px;
+  margin: 5px;
+  max-width: 80%;
+  align-self: flex-end;
+  font-size: large;
+  word-wrap: break-word;
+  background-color: #b2a0d3;
+}
 </style>
+
