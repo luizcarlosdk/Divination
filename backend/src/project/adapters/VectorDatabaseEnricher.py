@@ -8,7 +8,7 @@ from langchain_community.document_loaders import PyPDFLoader
 
 class VectorDatabaseEnricher(ContextEnricher):
     def __init__(self):
-        filepath = "src/project/database/characters.pdf"
+        filepath = "src/project/database/freerules-dnd.pdf"
         loader = PyPDFLoader(filepath)
         documento = loader.load()
 

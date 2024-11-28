@@ -45,8 +45,7 @@
 
                 >
                   <v-list-item-content  >
-                    <v-card-text :class="{'user-message': i % 2 === 0, 'bot-message': i % 2 !== 0}">
-                      {{ message }}
+                    <v-card-text :class="{'user-message': i % 2 === 0, 'bot-message': i % 2 !== 0}" class="message-text" v-html="message">
                     </v-card-text>
                     <v-list-item-title ></v-list-item-title>
                     </v-list-item-content>
@@ -81,6 +80,7 @@
 
 <script>
 import axios from 'axios'
+import { marked } from 'marked'
 
 export default {
   data: () => ({
@@ -156,6 +156,7 @@ export default {
       actualChat.messages.push(this.inputText)
       const question = this.inputText
       this.inputText = ''
+      this.loading = true
       try {
         const response = await axios.post(`${base_url}/v1/answer`, {
           user_question: question,
@@ -163,18 +164,15 @@ export default {
         })
         console.log(response)
         const actualChat = this.chats.find(chat => chat.chat_id === actual_chat_id);
-        actualChat.messages.push(response.data.projectAnswer)
+        const message = marked(response.data.projectAnswer)
+        actualChat.messages.push(message)
       } catch (error) {
         console.error(
           'Error:',
           error.response ? error.response.data : error.message
         )
       }
-      this.loading = true
-
-      setTimeout(() => {
-        this.loading = false
-      }, 2000)
+      this.loading = false
     },
     async changePersonality(personality) {
       const base_url = import.meta.env.VITE_BACKEND_URL
@@ -290,6 +288,10 @@ export default {
   font-size: large;
   word-wrap: break-word;
   background-color: #b2a0d3;
+}
+
+.message-text {
+  white-space: pre-line;
 }
 </style>
 

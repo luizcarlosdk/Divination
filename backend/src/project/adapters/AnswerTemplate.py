@@ -33,7 +33,6 @@ class AnswerTemplate(TemplateEnricher):
                 ("human", "{input}"),
             ]
         )
-        print(custom_template)
         return custom_template
 
     def get_history_template(self):
