@@ -1,15 +1,9 @@
 from project.ports.answerers.LLMAnswerer import LLMAnswerer
-
+from project.core.RagChain import RagChain
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-
-from langchain.chains import (
-    create_history_aware_retriever,
-    create_retrieval_chain,
-)
+from langchain.chains import create_history_aware_retriever
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.runnables.history import RunnableWithMessageHistory
-
 import os
 
 
@@ -37,20 +31,9 @@ class OpenAILLM(LLMAnswerer):
 
         question_answer_chain = create_stuff_documents_chain(llm, template)
 
-        rag_chain = create_retrieval_chain(
-            history_retriever, question_answer_chain
+        ragchain = RagChain(
+            chat_repository, history_retriever, question_answer_chain
         )
-
-        conversational_rag_chain = RunnableWithMessageHistory(
-            rag_chain,
-            chat_repository.get_history,
-            input_messages_key="input",
-            history_messages_key="chat_history",
-            output_messages_key="answer",
-        )
-        answer = conversational_rag_chain.invoke(
-            {"input": query},
-            config={"configurable": {"session_id": chat_id}},
-        )["answer"]
+        answer = ragchain.answer(query, chat_id)
 
         return answer
