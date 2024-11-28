@@ -1,10 +1,16 @@
-from project.adapters.AnswerRouter import AnswerRouter
+from project.adapters.routers.AnswerRouter import AnswerRouter
+from project.adapters.routers.ChatRouter import ChatRouter
+
 from project.adapters.Settings import Settings
-from project.adapters.OpenAILLM import OpenAILLM
-from project.adapters.VectorDatabaseEnricher import VectorDatabaseEnricher
+from project.adapters.answerers.OpenAILLM import OpenAILLM
+
+from project.adapters.enrichers.VectorDatabaseEnricher import (
+    VectorDatabaseEnricher,
+)
+from project.adapters.enrichers.AnswerEnricher import AnswerEnricher
+
 from project.core.ChatService import ChatService
-from project.adapters.AnswerTemplate import AnswerTemplate
-from project.adapters.ChatRepository import ChatRepository
+from project.adapters.database.ChatRepository import ChatRepository
 
 import uvicorn
 from fastapi import FastAPI
@@ -12,21 +18,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 
-def _inject_routers(api: FastAPI, router: AnswerRouter):
-    api.include_router(router.create())
+def _inject_routers(
+    api: FastAPI, answer_router: AnswerRouter, chat_router: ChatRouter
+):
+    api.include_router(answer_router.create())
+    api.include_router(chat_router.create())
 
 
 @asynccontextmanager
 async def _setup(api: FastAPI, settings: Settings):
     context_enricher = VectorDatabaseEnricher()
     llm_answerer = OpenAILLM()
-    template = AnswerTemplate()
+    template = AnswerEnricher()
     chat_repository = ChatRepository()
     service = ChatService(
         context_enricher, llm_answerer, template, chat_repository, settings
     )
-    router = AnswerRouter(service, chat_repository)
-    _inject_routers(api, router)
+    answer_router = AnswerRouter(service, chat_repository)
+    chat_router = ChatRouter(chat_repository)
+    _inject_routers(api, answer_router, chat_router)
     yield
 
 
