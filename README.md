@@ -1,4 +1,5 @@
-# MAC0499
+# Divination - MAC0499 Capstone Project
+
 This reposity contains the project for "MAC0499 - Trabalho de Formatura Supervisionado"
 
 ## Description
